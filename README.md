@@ -48,36 +48,30 @@ git clone <your-repo-url>
 cd OptimizeList-AI
 2. Install backend dependencies
 bash
-कोड कॉपी करणे
 npm install
 3. Install frontend dependencies
 bash
-कोड कॉपी करणे
 cd frontend
 npm install
 4. Start the servers
 Backend
 
 bash
-कोड कॉपी करणे
 npm run dev
 Frontend
 
 bash
-कोड कॉपी करणे
 npm run dev
 API Testing
 Fetch product by ASIN
 
 bash
-कोड कॉपी करणे
 curl -X POST http://localhost:9003/api/amazon-product \
 -H "Content-Type: application/json" \
 -d '{"ASIN":"<ASIN_NUMBER>"}'
 Get all search history
 
 bash
-कोड कॉपी करणे
 curl -X GET http://localhost:9003/all-history-product-list
 Gemini AI Prompt Overview
 The AI generates structured and optimized product data following these rules:
