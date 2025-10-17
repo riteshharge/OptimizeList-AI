@@ -1,53 +1,42 @@
-# Amazon Product Listing Optimizer Using AI
+# Amazon Product Listing with AI
 
-![Project Badge](https://img.shields.io/badge/status-active-brightgreen)
-![Tech Stack](https://img.shields.io/badge/Tech-React_Node.js_MySQL-blue)
-
----
-
-## Project Summary
-This project allows users to fetch Amazon product details using ASIN numbers and get an AI-optimized version of the product listing. Users can also view their search history and compare original and enhanced product data side by side.
-
----
-
-## Tech Stack
-- **Frontend:** React (Vite)
-- **Backend:** Node.js, Express.js
-- **Database:** MySQL
-- **AI:** Google Gemini / OpenAI
+## Project Overview
+This project allows users to fetch Amazon product details using ASIN numbers and receive an AI-generated optimized version alongside the original product data. Users can also view their search history and track previously searched ASINs.
 
 ---
 
 ## Backend Structure
 
 ### Database
-- Uses **MySQL** to store product details.
-- Contains a **`products` table** to save both original and AI-optimized product data.
+- **MySQL** connection established
+- **`products` table** created to store product details
 
-### Folder Organization
-- **`router/`** → API endpoints
+### Folders
+- **`router/`** → API routes
 - **`controller/`** → Business logic for:
-  - Fetching product data using ASIN
+  - Searching product data
   - Retrieving search history
-- **`config/`** → Database configuration and table setup
+- **`config/`** → Database table setup and configuration
 
 ---
 
 ## Frontend Structure
+- Built with **React** using **Vite** for fast setup
 
 ### Components
-- **ASIN Input Component**
-  - Input box for ASIN
-  - Submit button triggers async fetch
-  - Loader animation while fetching
+- **Centralized Input Component**
+  - ASIN input box
+  - Submit button triggers asynchronous product fetch
+  - Loader animation displayed until data is fetched
 - **Product Cards**
-  - One card for original product details
-  - One card for AI-optimized product data
+  - Two side-by-side cards displaying:
+    - Original product data
+    - AI-optimized product data
 - **Footer Component**
   - Displays frequently used search keywords
-- **History Component**
-  - Shows previously searched ASINs (most recent on top)
-  - Hovering shows full ASIN
+- **View History Component**
+  - Displays previously searched ASINs (most recent on top)
+  - Hover to see full ASIN
 
 ---
 
@@ -59,51 +48,59 @@ git clone <your-repo-url>
 cd OptimizeList-AI
 2. Install backend dependencies
 bash
+कोड कॉपी करणे
 npm install
 3. Install frontend dependencies
 bash
+कोड कॉपी करणे
 cd frontend
 npm install
 4. Start the servers
 Backend
 
 bash
+कोड कॉपी करणे
 npm run dev
 Frontend
 
 bash
+कोड कॉपी करणे
 npm run dev
-API Endpoints
+API Testing
 Fetch product by ASIN
 
 bash
+कोड कॉपी करणे
 curl -X POST http://localhost:9003/api/amazon-product \
 -H "Content-Type: application/json" \
 -d '{"ASIN":"<ASIN_NUMBER>"}'
 Get all search history
 
 bash
+कोड कॉपी करणे
 curl -X GET http://localhost:9003/all-history-product-list
-Gemini AI Optimization Rules
+Gemini AI Prompt Overview
+The AI generates structured and optimized product data following these rules:
+
 Title
 
 Keyword-rich, 50–200 characters
 
 Includes brand, product type, and key features
 
-If missing, generated from bullet points/features
+Generated from bullet points/features if missing
 
 Description
 
-Detailed, persuasive
+Detailed and persuasive
 
-Created using title, features, highlights, and use cases
+Uses title, features, highlights, and use cases
 
 Bullet Points
 
-5–7 clear and concise points
+5–7 concise and clear points
 
-1–2 sentences each
+One or two sentences each
 
 Emphasizes product significance
 
@@ -115,10 +112,10 @@ Informative and scannable
 
 Price
 
-Uses the original product price only
+Uses original product price only
 
 Keywords
 
 5–10 relevant keywords
 
-Focused on search terms similar to the title
+Focused on search terms related to the title
