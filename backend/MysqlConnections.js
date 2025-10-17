@@ -7,8 +7,8 @@ const pool = mysql2.createPool({
   connectionLimit: parseInt(process.env.connectionLimit, 10) || 10,
   host: process.env.HOST,
   user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
+  password: process.env.PASS,
+  database: process.env.DB,
 });
 
 (async () => {
