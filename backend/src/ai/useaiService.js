@@ -3,73 +3,73 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export async function AiServiceForAmazonProduct(originalData) {
-  const prompt = `You are an expert Amazon product listing optimizer. 
-Your goal is to create a fully SEO-optimized, persuasive, and Amazon-compliant product listing using the provided data.
+  const prompt = `You are an expert in creating Amazon product listings. 
+Your task is to produce a fully optimized, SEO-friendly, and Amazon-compliant product listing based on the input data.
 
-ORIGINAL PRODUCT DATA:
+INPUT PRODUCT DATA:
 ${JSON.stringify(originalData, null, 2)}
 
 =============================
-TASK INSTRUCTIONS:
+TASK DETAILS:
 =============================
-Generate an improved listing with the following fields. 
-Each field must be complete, factual, and well-written — no placeholders, no empty strings.
+Create a refined product listing with the following required fields. 
+All fields must be complete, accurate, and well-written. Do not leave any placeholders or empty values.
 
 1. **title** (50–200 characters):
    - Include brand, product type, and main features.
-   - Make it keyword-rich, natural, and Amazon-compliant.
-   - If missing, generate one from bullets or description.
+   - Make it natural, keyword-rich, and suitable for Amazon search.
+   - If the title is missing, generate one from the bullet points or description.
 
-2. **Description** (150–500 words):
-   - Persuasive and detailed.
-   - Summarize key benefits, use cases, and customer value.
-   - Must sound human, factual, and natural.
-   - Avoid exaggerated or promotional claims.
+2. **description** (150–500 words):
+   - Persuasive and informative.
+   - Highlight key benefits, practical uses, and value for customers.
+   - Maintain a factual and natural tone.
+   - Avoid exaggeration or unverifiable claims.
 
-3. **bullet_points** (5–7 total):
-   - Each 1–2 sentences, focusing on a single feature or benefit.
+3. **bullet_points** (5–7 items):
+   - Each bullet should be 1–2 sentences focusing on a single benefit or feature.
    - Use concise, professional language.
-   - Begin each point with an action-oriented benefit or key attribute.
+   - Start each bullet with an action-oriented benefit or key attribute.
 
 4. **features** (100–200 words):
-   - Concise overview of the product’s main specs and unique selling points.
-   - Highlight what makes it useful, efficient, or innovative.
+   - Provide a concise summary of the product’s specifications and standout points.
+   - Emphasize what makes it practical, efficient, or unique.
 
 5. **price**:
-   - Keep EXACTLY as in original data (do not modify or format).
+   - Copy exactly as provided in the original data (do not change formatting).
 
-6. **keywords** (5–10 total):
-   - Include relevant, high-traffic search terms for the product.
-   - Avoid repeating words from the title.
-   - Use short, lowercase phrases.
-
-=============================
-STRICT RULES:
-=============================
-- All required fields must be present and non-empty.
-- Never include markdown, explanations, or commentary.
-- Maintain factual accuracy; do not invent technical details.
-- Ensure the response is valid JSON — parsable and well-structured.
-- Use fluent, natural English that aligns with Amazon’s tone and compliance standards.
+6. **keywords** (5–10 items):
+   - Include relevant, high-traffic search terms.
+   - Avoid duplicating words from the title.
+   - Use short, lowercase phrases suitable for search optimization.
 
 =============================
-OUTPUT FORMAT (JSON ONLY):
+RULES TO FOLLOW STRICTLY:
+=============================
+- Every field must be present and non-empty.
+- Output must be valid JSON only — no explanations, comments, or markdown.
+- Keep all technical details accurate; do not invent specs.
+- Use fluent, natural English aligned with Amazon standards.
+
+=============================
+EXPECTED JSON FORMAT:
 =============================
 {
-  "title": "Enhanced, keyword-rich product title",
-  "Description": "Persuasive and detailed description (150–500 words)",
-  "features": "Concise summary of specifications and highlights",
+  "title": "Fully optimized, keyword-rich product title",
+  "description": "Detailed, persuasive product description (150–500 words)",
+  "features": "Concise summary of specifications and unique points",
   "bullet_points": [
-    "Benefit-focused bullet 1",
-    "Benefit-focused bullet 2",
-    "Benefit-focused bullet 3",
-    "Benefit-focused bullet 4",
-    "Benefit-focused bullet 5"
+    "Key benefit or feature 1",
+    "Key benefit or feature 2",
+    "Key benefit or feature 3",
+    "Key benefit or feature 4",
+    "Key benefit or feature 5"
   ],
   "price": "${originalData.price}",
   "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
 }
-`;
+`
+;
 
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
