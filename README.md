@@ -1,128 +1,120 @@
-# Amazon Product Listing with AI
-Project Overview
+# Amazon Product Listing Optimizer Using AI
 
-This project allows users to fetch Amazon product details using ASIN numbers and get an optimized AI-generated version alongside the original data. Users can also view their search history.
+## Project Summary
+This application allows users to fetch product details from Amazon using ASIN numbers and generates an AI-optimized version of the product listing. Users can also view their search history and compare original and AI-enhanced data side by side.
 
-**Backend Structure**
+---
 
-  **Database**:
+## Backend Structure
 
-    MySQL database connection established
+### Database
+- Uses **MySQL** to store product details.
+- Contains a **`products` table** to save both original and AI-optimized data.
 
-    products table created for storing product data
+### Folder Organization
+- **`router/`** → Handles API endpoints.
+- **`controller/`** → Implements core business logic:
+  - Fetching product data using ASIN
+  - Retrieving search history
+- **`config/`** → Database configuration and table setup.
 
-  **Folders**:
+---
 
-    router/ → API routes
+## Frontend Structure
+- Built with **React** (Vite setup for fast development).
 
-    controller/ → Business logic for:
+### Components
+- **ASIN Input Component**
+  - Input box for ASIN
+  - Submit button to fetch product data asynchronously
+  - Loader animation while fetching
+- **Product Cards**
+  - One card for original product details
+  - One card for AI-optimized product data
+- **Footer Component**
+  - Displays frequently used search keywords
+- **History Component**
+  - Displays previously searched ASINs (most recent on top)
+  - Hover to see full ASIN
 
-    Searching product data
+---
 
-    Retrieving product history
+## Setup Instructions
 
-    config/ → Database table setup
+### 1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd OptimizeList-AI
+2. Install backend dependencies
+bash
+कोड कॉपी करणे
+npm install
+3. Install frontend dependencies
+bash
+कोड कॉपी करणे
+cd frontend
+npm install
+4. Start the servers
+Backend
 
-**Frontend Structure**
+bash
+कोड कॉपी करणे
+npm run dev
+Frontend
 
-  Built with React (using Vite for setup)
+bash
+कोड कॉपी करणे
+npm run dev
+API Endpoints
+Fetch product by ASIN
 
-  Components:
+bash
+कोड कॉपी करणे
+curl -X POST http://localhost:9003/api/amazon-product \
+-H "Content-Type: application/json" \
+-d '{"ASIN":"<ASIN_NUMBER>"}'
+Get all search history
 
-    Centralized input component with:
+bash
+कोड कॉपी करणे
+curl -X GET http://localhost:9003/all-history-product-list
+Gemini AI Optimization Rules
+The AI generates structured and effective product listings based on these rules:
 
-      ASIN input box
+Title
 
-      Submit button → fetches product data asynchronously
+Keyword-rich, 50–200 characters
 
-      Loader animation until data is fetched
+Includes brand, product type, and key features
 
-    Two cards side-by-side showing:
+If missing, generated from bullet points/features
 
-      Original product data
+Description
 
-      AI-optimized data
+Detailed and persuasive
 
-    Footer component → displays frequently used search keywords
+Created using title, features, highlights, and use cases
 
-    View History component → displays previously searched ASINs (most recent on top, hover to see ASIN)
+Bullet Points
 
-**Setup Instructions**
+5–7 clear and concise points
 
-  Clone the repository
+1–2 sentences each
 
-  Install backend dependencies:
+Emphasizes product significance
 
-    npm install
+Features
 
-  Install frontend dependencies:
+Highlights technical aspects or unique selling points
 
-    cd frontend
-    npm install
+Informative and scannable
 
+Price
 
-**Start the backend server:**
+Uses the original product price only
 
-  npm run dev
+Keywords
 
+5–10 relevant keywords
 
-**Start the frontend:**
-
-  npm run dev
-
-**API Testing**
-
-  Fetch product by ASIN
-
-    curl -X POST http://localhost:9003/api/amazon-product \
-    -H "Content-Type: application/json" \
-    -d '{"ASIN":<ASIN_NUMBER>}'
-
-
-  Get all search history
-
-    curl -X GET http://localhost:9003/all-history-product-list
-
-  Gemini AI Prompt Overview
-
-    The Gemini prompt ensures the AI generates optimized and structured product data. Key points:
-
-      Title:
-
-        Keyword-rich, 50–200 characters
-
-        Includes brand, product type, key features
-
-        If missing, create from bullet points/features
-
-      Description:
-
-        Detailed, persuasive, never empty
-
-        Generated using title, features, highlights, and use cases
-
-      Bullet Points:
-
-        5–7 precise, clear points
-
-        One or two sentences each
-
-        Emphasizes product significance
-
-      Features:
-
-        Highlight key technical aspects or unique selling points
-
-        Informative and scannable
-
-      Price:
-
-        Use original price only; do not modify
-
-      Keywords:
-
-      5–10 relevant keywords
-
-      Focus on search terms similar to title
-
-     And added few strict rules so that it functions as instructed 
+Focused on search terms similar to the title
