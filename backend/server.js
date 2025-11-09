@@ -7,7 +7,7 @@ import amazonRoutes from "./src/routes/route.js";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9003;
 
 // Middleware
 app.use(express.json());
@@ -17,15 +17,19 @@ app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
 // API Routes
 app.use("/api", amazonRoutes);
 
-// Serve frontend correctly
-const DIST_PATH = path.join(process.cwd(), "frontend/dist");
+// Serve frontend
+// Match Vite base path "/OptimizeList-AI/"
+const frontendDistPath = path.join(process.cwd(), "frontend/dist");
+app.use("/OptimizeList-AI", express.static(frontendDistPath));
 
-// Serve static files without extra prefix
-app.use(express.static(DIST_PATH));
+// Handle React routing for frontend
+app.get("/OptimizeList-AI/*", (req, res) => {
+  res.sendFile(path.join(frontendDistPath, "index.html"));
+});
 
-// SPA fallback: send index.html for any unmatched route
-app.get("*", (req, res) => {
-  res.sendFile(path.join(DIST_PATH, "index.html"));
+// Root redirect (optional)
+app.get("/", (req, res) => {
+  res.redirect("/OptimizeList-AI/");
 });
 
 app.listen(PORT, "0.0.0.0", () => {
