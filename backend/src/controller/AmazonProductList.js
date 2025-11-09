@@ -1,6 +1,8 @@
 import { chromium } from "playwright";
-import db from "../../mysqlConnections.js";
+import "../../MongoConnections.js";
+
 import { AiServiceForAmazonProduct } from "../ai/useaiService.js";
+import Product from "../models/Product.js";
 
 export async function AmazonProductList(req, res) {
   const { ASIN } = req.body;
@@ -40,7 +42,6 @@ export async function AmazonProductList(req, res) {
 
     await browser.close();
 
-    // Prepare original data structure
     const bulletPoints = features
       ? features.split("\n").filter((line) => line.trim() !== "")
       : [];
@@ -48,18 +49,16 @@ export async function AmazonProductList(req, res) {
     const originalData = {
       asin: ASIN,
       title: title || "",
-      Description: "", // Original doesn't have description, only features
+      Description: "",
       features: features || "",
       bullet_points: bulletPoints,
       price: price || "",
     };
 
-    // Check if we have enough data to optimize
     const hasMinimalData = title || features || bulletPoints.length > 0;
 
     let optimizedData;
     if (!hasMinimalData) {
-      // If no data found, return empty optimized structure
       optimizedData = {
         title: "",
         Description: "",
@@ -69,27 +68,21 @@ export async function AmazonProductList(req, res) {
         keywords: [],
       };
     } else {
-      // Call AI service to generate optimized data
       optimizedData = await AiServiceForAmazonProduct(originalData);
-
-      // Ensure price is preserved from original
       optimizedData.price = originalData.price;
     }
 
-    // Store in database
-    const insertQuery = `
-      INSERT INTO products (asin, original_data, optimized_data)
-      VALUES (?, ?, ?)
-      ON DUPLICATE KEY UPDATE 
-        original_data = VALUES(original_data),
-        optimized_data = VALUES(optimized_data)
-    `;
-
-    await db.execute(insertQuery, [
-      ASIN,
-      JSON.stringify(originalData),
-      JSON.stringify(optimizedData),
-    ]);
+    // ✅ MongoDB Upsert
+    await Product.findOneAndUpdate(
+      { asin: ASIN },
+      {
+        asin: ASIN,
+        original_data: originalData,
+        optimized_data: optimizedData,
+        timestamp: new Date(),
+      },
+      { upsert: true, new: true }
+    );
 
     return res.status(200).json({
       success: true,
@@ -98,7 +91,7 @@ export async function AmazonProductList(req, res) {
       optimized: optimizedData,
     });
   } catch (error) {
-    console.error("Error fetching product details:", error.message);
+    console.error("Error fetching product details:", error);
     return res.status(500).json({
       success: false,
       message: `Unable to fetch or process product for ASIN ${ASIN}`,

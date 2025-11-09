@@ -1,23 +1,29 @@
-import pool from "../../mysqlConnections.js";
+import mongoose from "../../MongoConnections.js";
 
-async function createTable() {
-  const createTableSQL = `
-    CREATE TABLE IF NOT EXISTS products (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      asin VARCHAR(10) NOT NULL UNIQUE,
-      original_data TEXT,
-      optimized_data TEXT,
-      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
+const { Schema } = mongoose;
 
+const productSchema = new Schema(
+  {
+    asin: { type: String, required: true, unique: true, maxlength: 20 },
+    original_data: { type: Schema.Types.Mixed },
+    optimized_data: { type: Schema.Types.Mixed },
+    timestamp: { type: Date, default: Date.now },
+  },
+  { collection: "products" }
+);
+
+const Product = mongoose.model("Product", productSchema);
+
+async function ensureIndexes() {
   try {
-    await pool.query(createTableSQL);
-    console.log("Table 'products' created or already exists.");
+    await Product.init(); // creates indexes declared in schema (e.g., unique)
+    console.log("'products' collection ready with indexes.");
   } catch (err) {
-    console.error("Error creating table:", err);
+    console.error("Error ensuring product indexes:", err);
     process.exit(1);
   }
 }
 
-createTable();
+ensureIndexes();
+
+export { Product };
