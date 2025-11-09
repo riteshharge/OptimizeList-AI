@@ -1,115 +1,140 @@
-# Amazon Product Listing with AI
+# **Amazon Product Listing Optimizer Powered by AI**
 
-## Project Overview
-This project allows users to fetch Amazon product details using ASIN numbers and receive an AI-generated optimized version alongside the original product data. Users can also view their search history and track previously searched ASINs.
+## **Overview**
 
----
-
-## Backend Structure
-
-### Database
-- **MySQL** connection established
-- **`products` table** created to store product details
-
-### Folders
-- **`router/`** → API routes
-- **`controller/`** → Business logic for:
-  - Searching product data
-  - Retrieving search history
-- **`config/`** → Database table setup and configuration
+This application allows users to optimize Amazon product listings using AI.
+Users enter an ASIN, the system fetches the original product details, and AI generates an improved version.
+All searches are stored in MongoDB and can be viewed anytime through the History section.
 
 ---
 
-## Frontend Structure
-- Built with **React** using **Vite** for fast setup
+## **Backend**
 
-### Components
-- **Centralized Input Component**
-  - ASIN input box
-  - Submit button triggers asynchronous product fetch
-  - Loader animation displayed until data is fetched
-- **Product Cards**
-  - Two side-by-side cards displaying:
-    - Original product data
-    - AI-optimized product data
-- **Footer Component**
-  - Displays frequently used search keywords
-- **View History Component**
-  - Displays previously searched ASINs (most recent on top)
-  - Hover to see full ASIN
+### **Database**
+
+- Uses **MongoDB + Mongoose**
+- Stores:
+
+  - ASIN
+  - Original product data
+  - AI-optimized listing
+  - Timestamp
+
+### **Folder Structure**
+
+- `router/` API routes
+- `controller/` logic for:
+
+  - Fetching product data
+  - AI optimization
+  - History retrieval
+
+- `models/` Mongoose schemas
+- `config/` MongoDB connection
 
 ---
 
-## Setup Instructions
+## **Frontend**
 
-### 1. Clone the repository
+Built using **React + Vite**.
+
+### **Key Features**
+
+- ASIN input with suggestions
+- Loader while fetching
+- Two cards:
+
+  - Original Amazon listing
+  - AI-optimized listing
+
+- Search history page
+- Responsive and clean UI
+
+---
+
+## **Setup Guide**
+
+### **1. Clone Repository**
+
 ```bash
 git clone <your-repo-url>
 cd OptimizeList-AI
-2. Install backend dependencies
-bash
+```
+
+### **2. Install Backend Dependencies**
+
+```bash
 npm install
-3. Install frontend dependencies
-bash
+```
+
+### **3. Install Frontend Dependencies**
+
+```bash
 cd frontend
 npm install
-4. Start the servers
-Backend
+```
 
-bash
+### **4. Start Backend**
+
+```bash
 npm run dev
-Frontend
+```
 
-bash
+### **5. Start Frontend**
+
+```bash
 npm run dev
-API Testing
-Fetch product by ASIN
+```
 
-bash
+---
+
+## **API Endpoints**
+
+### **Fetch Product by ASIN**
+
+```bash
 curl -X POST http://localhost:9003/api/amazon-product \
 -H "Content-Type: application/json" \
 -d '{"ASIN":"<ASIN_NUMBER>"}'
-Get all search history
+```
 
-bash
+### **Get Search History**
+
+```bash
 curl -X GET http://localhost:9003/all-history-product-list
-Gemini AI Prompt Overview
-The AI generates structured and optimized product data following these rules:
+```
 
-Title
+---
 
-Keyword-rich, 50–200 characters
+## **AI Optimization Logic (Gemini)**
 
-Includes brand, product type, and key features
+### **Title**
 
-Generated from bullet points/features if missing
+- Clear and keyword-rich
+- 50–200 characters
+- Includes brand + product type + key feature
 
-Description
+### **Description**
 
-Detailed and persuasive
+- Persuasive and helpful
+- Uses title, features, highlights, and use cases
 
-Uses title, features, highlights, and use cases
+### **Bullet Points**
 
-Bullet Points
+- 5–7 points
+- Short, clear, benefit-focused
 
-5–7 concise and clear points
+### **Technical Features**
 
-One or two sentences each
+- Highlights specs
+- Easy to scan
 
-Emphasizes product significance
+### **Keywords**
 
-Features
+- 5–10 high-intent keywords
 
-Highlights technical aspects or unique selling points
+### **Price**
 
-Informative and scannable
+- Always taken from original listing
 
-Price
-
-Uses original product price only
-
-Keywords
-
-5–10 relevant keywords
-
-Focused on search terms related to the title
+---

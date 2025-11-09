@@ -1,0 +1,158 @@
+/* ============================
+   Base Container (Reference Style)
+============================= */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+}
+
+/* ============================
+   Hero Section (Full Width)
+============================= */
+.hero {
+  width: 100%;
+  padding: 3rem 2rem;
+  background: #eef2ff;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-top: 0.6rem;
+  color: #555;
+}
+
+/* ============================
+   Card Styling (Reference Style)
+============================= */
+.card {
+  padding: 2em;
+  margin: 1.5em auto;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 550px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* Input Label */
+.label {
+  font-size: 1rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Input */
+.input {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.25s ease;
+}
+
+.input:focus {
+  border-color: #646cff;
+}
+
+/* Submit Button */
+.btn-fetch {
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 14px;
+  background: #646cff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.btn-fetch:hover {
+  background: #4d52ff;
+  transform: translateY(-3px);
+}
+
+/* ============================
+   Example ASIN Suggestions
+============================= */
+.example-box {
+  margin-top: 1.2rem;
+  padding: 1.2rem;
+  background: #f3f4ff;
+  border-left: 6px solid #646cff;
+  border-radius: 12px;
+}
+
+.example-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.example-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.example-list li {
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.example-list li:hover {
+  background: #ececff;
+  transform: translateX(4px);
+}
+
+/* ============================
+   Responsive
+============================= */
+@media (max-width: 768px) {
+  #root {
+    padding: 1.5rem;
+  }
+
+  .hero {
+    padding: 2rem 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .card {
+    padding: 1.5em;
+  }
+}
