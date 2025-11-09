@@ -274,7 +274,7 @@ function App() {
     setResult(null);
 
     try {
-      const response = await fetch("http://localhost:9003/api/amazon-product", {
+      const response = await fetch("https://ai-powered-amazon-product-listing.onrender.com/api/amazon-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ASIN: finalASIN }),
@@ -299,7 +299,7 @@ function App() {
     setError("");
     try {
       const response = await fetch(
-        "http://localhost:9003/api/all-history-product-list"
+        "https://ai-powered-amazon-product-listing.onrender.com/api/all-history-product-list"
       );
       const data = await response.json();
 
