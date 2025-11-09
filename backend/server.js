@@ -2,27 +2,30 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import path from "path";
 import amazonRoutes from "./src/routes/route.js";
 
 dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3000; // fallback port
+const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(express.json());
 app.use(helmet());
+app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true })); // allow all origins for now
 
-// Uncomment and configure CORS if needed
+// API Routes
+app.use("/api", amazonRoutes);
+
+// Serve frontend
 app.use(
-  cors({
-    methods: ["GET", "POST"],
-    credentials: true,
-    origin: ["http://localhost:5173"],
-  })
+  "/AmazonProductListingWithAI",
+  express.static(path.join(process.cwd(), "frontend/dist"))
 );
+app.get("*", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "frontend/dist/index.html"));
+});
 
-app.use('/api', amazonRoutes);
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });
