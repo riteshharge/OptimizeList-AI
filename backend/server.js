@@ -12,36 +12,20 @@ const PORT = process.env.PORT || 9003;
 // Middleware
 app.use(express.json());
 app.use(helmet());
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
+app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
 
 // API Routes
 app.use("/api", amazonRoutes);
 
-// Serve frontend static files
+// Serve frontend
 const frontendDistPath = path.join(process.cwd(), "frontend/dist");
 app.use("/OptimizeList-AI", express.static(frontendDistPath));
 
-// SPA catch-all: serve index.html for any frontend route
-app.use("/OptimizeList-AI", (req, res, next) => {
-  if (req.method === "GET" && !req.path.startsWith("/api")) {
-    res.sendFile(path.join(frontendDistPath, "index.html"));
-  } else {
-    next();
-  }
+// **Serve index.html for any other route under /OptimizeList-AI**
+app.get("/OptimizeList-AI/*", (req, res) => {
+  res.sendFile(path.join(frontendDistPath, "index.html"));
 });
 
-// Optional root redirect to SPA
-app.get("/", (req, res) => {
-  res.redirect("/OptimizeList-AI/");
-});
-
-// Start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
