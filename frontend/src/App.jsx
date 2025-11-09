@@ -9,7 +9,7 @@ function App() {
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
-  const demoASINs = ["B08N5WRWNW", "B07V2FR28Y", "B0CW9JS8HK"]; // ✅ Your demo ASINs
+  const demoASINs = ["B08N5WRWNW", "B07V2FR28Y", "B0CW9JS8HK"];
 
   const styles = {
     container: {
@@ -25,10 +25,7 @@ function App() {
       bottom: 0,
       overflowY: "auto",
     },
-    maxWidth: {
-      maxWidth: "1400px",
-      margin: "0 auto",
-    },
+    maxWidth: { maxWidth: "1400px", margin: "0 auto" },
     header: {
       display: "flex",
       justifyContent: "space-between",
@@ -51,40 +48,6 @@ function App() {
       fontSize: "1rem",
       transition: "background-color 0.3s",
     },
-
-    // ✅ ASIN Suggestion UI
-    suggestionsWrapper: {
-      marginTop: "22px",
-      width: "100%",
-    },
-    suggestionsTitle: {
-      fontSize: "0.92rem",
-      fontWeight: "600",
-      color: "#374151",
-      marginBottom: "10px",
-    },
-    suggestionsRow: {
-      display: "flex",
-      gap: "12px",
-      flexWrap: "wrap",
-      width: "100%",
-    },
-    suggestionItem: {
-      padding: "10px 16px",
-      borderRadius: "8px",
-      border: "1px solid #2563eb",
-      cursor: "pointer",
-      background: "#e0edff",
-      color: "#1e40af",
-      fontWeight: "600",
-      fontSize: "0.95rem",
-      transition: "0.2s",
-    },
-    suggestionItemHover: {
-      background: "#2563eb",
-      color: "white",
-    },
-
     formContainer: {
       backgroundColor: "white",
       padding: "32px",
@@ -123,13 +86,7 @@ function App() {
       display: "block",
       margin: "0 auto",
     },
-
-    error: {
-      marginTop: "16px",
-      color: "#dc2626",
-      fontWeight: "500",
-    },
-
+    error: { marginTop: "16px", color: "#dc2626", fontWeight: "500" },
     loadingContainer: {
       display: "flex",
       flexDirection: "column",
@@ -145,12 +102,7 @@ function App() {
       borderRadius: "50%",
       animation: "spin 1s linear infinite",
     },
-    loadingText: {
-      marginTop: "16px",
-      color: "#4b5563",
-      fontWeight: "500",
-    },
-
+    loadingText: { marginTop: "16px", color: "#4b5563", fontWeight: "500" },
     cardsGrid: {
       display: "grid",
       gridTemplateColumns: "repeat(2, 1fr)",
@@ -185,11 +137,7 @@ function App() {
       whiteSpace: "pre-wrap",
       lineHeight: "1.6",
     },
-    bulletList: {
-      listStyle: "none",
-      padding: 0,
-      margin: 0,
-    },
+    bulletList: { listStyle: "none", padding: 0, margin: 0 },
     bulletItem: {
       fontSize: "0.875rem",
       color: "#4b5563",
@@ -204,51 +152,11 @@ function App() {
       color: "#16a34a",
       margin: "8px 0",
     },
-
-    keywordsContainer: {
-      backgroundColor: "white",
-      padding: "40px 24px",
-      borderRadius: "12px",
-      border: "2px solid #d1d5db",
-      marginTop: "24px",
-      minHeight: "80px",
-      overflow: "visible",
-    },
-    keywordsTitle: {
+    demoContainer: { marginTop: "8px" },
+    demoMessage: {
       fontSize: "0.875rem",
-      fontWeight: "600",
-      color: "#4b5563",
+      color: "#6b7280",
       marginBottom: "8px",
-    },
-    keywordTags: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "8px",
-    },
-    keywordTag: {
-      fontSize: "0.75rem",
-      backgroundColor: "#dbeafe",
-      color: "#1e40af",
-      padding: "6px 12px",
-      borderRadius: "4px",
-      fontWeight: "500",
-    },
-
-    emptyState: {
-      textAlign: "center",
-      color: "#4b5563",
-      padding: "80px 0",
-      fontSize: "1.1rem",
-    },
-
-    emptyDataNotice: {
-      backgroundColor: "#fef3c7",
-      color: "#92400e",
-      padding: "12px 16px",
-      borderRadius: "8px",
-      fontSize: "0.875rem",
-      marginTop: "8px",
-      border: "1px solid #fde68a",
     },
   };
 
@@ -274,7 +182,7 @@ function App() {
     setResult(null);
 
     try {
-      const response = await fetch("https://ai-powered-amazon-product-listing.onrender.com/api/amazon-product", {
+      const response = await fetch("http://localhost:5000/api/amazon-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ASIN: finalASIN }),
@@ -284,6 +192,15 @@ function App() {
 
       if (data.success) {
         setResult(data);
+        const storedHistory = JSON.parse(
+          localStorage.getItem("asinHistory") || "[]"
+        );
+        storedHistory.unshift({
+          ...data,
+          asin: finalASIN,
+          createdAt: new Date().toISOString(),
+        });
+        localStorage.setItem("asinHistory", JSON.stringify(storedHistory));
       } else {
         setError(data.message || "Failed to fetch product data");
       }
@@ -292,27 +209,6 @@ function App() {
     }
 
     setLoading(false);
-  };
-
-  const fetchHistory = async () => {
-    setLoadingHistory(true);
-    setError("");
-    try {
-      const response = await fetch(
-        "https://ai-powered-amazon-product-listing.onrender.com/api/all-history-product-list"
-      );
-      const data = await response.json();
-
-      if (data.success) {
-        setHistory(data.products || []);
-        setShowHistory(true);
-      } else {
-        setError("Failed to fetch history");
-      }
-    } catch (err) {
-      setError("Failed to fetch history: " + err.message);
-    }
-    setLoadingHistory(false);
   };
 
   const formatPrice = (price) => {
@@ -337,34 +233,35 @@ function App() {
     return (
       <div style={styles.card}>
         <h3 style={styles.cardTitle}>{title}</h3>
-
         {hasNoData && (
-          <div style={styles.emptyDataNotice}>
+          <div
+            style={{
+              backgroundColor: "#fef3c7",
+              padding: "10px",
+              borderRadius: "8px",
+            }}
+          >
             No product data available for this ASIN
           </div>
         )}
-
         {displayTitle && (
           <>
             <p style={styles.sectionTitle}>Title:</p>
             <p style={styles.sectionContent}>{displayTitle}</p>
           </>
         )}
-
         {displayDescription && (
           <>
             <p style={styles.sectionTitle}>Description:</p>
             <p style={styles.sectionContent}>{displayDescription}</p>
           </>
         )}
-
         {displayFeatures && !isOptimized && (
           <>
             <p style={styles.sectionTitle}>Features:</p>
             <p style={styles.sectionContent}>{displayFeatures}</p>
           </>
         )}
-
         {displayBulletPoints.length > 0 && (
           <>
             <p style={styles.sectionTitle}>Bullet Points:</p>
@@ -377,7 +274,6 @@ function App() {
             </ul>
           </>
         )}
-
         {displayPrice && (
           <>
             <p style={styles.sectionTitle}>Price:</p>
@@ -388,6 +284,89 @@ function App() {
     );
   };
 
+  const openHistoryPage = () => {
+    const newWindow = window.open("", "_blank");
+    const storedHistory = JSON.parse(
+      localStorage.getItem("asinHistory") || "[]"
+    );
+
+    newWindow.document.write(`
+      <html>
+        <head>
+          <title>Product History</title>
+          <style>
+            body { font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; padding: 20px; background: #f0f7ff; }
+            .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            .card { border: 2px solid #d1d5db; border-radius: 12px; padding: 24px; background: white; margin-bottom: 20px; }
+            .title { font-size: 1.25rem; font-weight: bold; color: #2563eb; margin-bottom: 16px; }
+            .section { margin-bottom: 8px; }
+            .label { font-weight: 600; color: #374151; }
+            .content { color: #1f2937; white-space: pre-wrap; }
+            .backBtn { margin-bottom: 16px; padding: 10px 20px; background: #4b5563; color: white; border: none; border-radius: 6px; cursor: pointer; }
+          </style>
+        </head>
+        <body>
+          <button class="backBtn" onclick="window.close()">Back</button>
+          <h1>Product History</h1>
+          <div class="grid">
+            ${storedHistory
+              .map(
+                (item) => `
+              <div class="card">
+                <div class="title">Original Listing</div>
+                <div class="section"><span class="label">Title:</span> <div class="content">${
+                  item.original?.title || ""
+                }</div></div>
+                <div class="section"><span class="label">Description:</span> <div class="content">${
+                  item.original?.Description || item.original?.description || ""
+                }</div></div>
+                <div class="section"><span class="label">Features:</span> <div class="content">${
+                  item.original?.features || ""
+                }</div></div>
+                <div class="section"><span class="label">Bullet Points:</span> <div class="content">${(
+                  item.original?.bullet_points || []
+                ).join(", ")}</div></div>
+                <div class="section"><span class="label">Price:</span> <div class="content">₹${
+                  item.original?.price || ""
+                }</div></div>
+
+                <div class="title">Optimized Listing</div>
+                <div class="section"><span class="label">Title:</span> <div class="content">${
+                  item.optimized?.title || ""
+                }</div></div>
+                <div class="section"><span class="label">Description:</span> <div class="content">${
+                  item.optimized?.Description ||
+                  item.optimized?.description ||
+                  ""
+                }</div></div>
+                <div class="section"><span class="label">Features:</span> <div class="content">${
+                  item.optimized?.features || ""
+                }</div></div>
+                <div class="section"><span class="label">Bullet Points:</span> <div class="content">${(
+                  item.optimized?.bullet_points || []
+                ).join(", ")}</div></div>
+                <div class="section"><span class="label">Price:</span> <div class="content">₹${
+                  item.optimized?.price || ""
+                }</div></div>
+                <div class="section"><span class="label">Keywords:</span> <div class="content">${(
+                  item.optimized?.keywords || []
+                ).join(", ")}</div></div>
+                <div class="section"><span class="label">ASIN:</span> <div class="content">${
+                  item.asin
+                }</div></div>
+                <div class="section"><span class="label">Date:</span> <div class="content">${new Date(
+                  item.createdAt
+                ).toLocaleString()}</div></div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        </body>
+      </html>
+    `);
+  };
+
   return (
     <div style={styles.container}>
       <style>{keyframes}</style>
@@ -396,7 +375,7 @@ function App() {
           <h1 style={styles.title}>
             AI-Powered Amazon Product Listing Optimizer
           </h1>
-          <button onClick={fetchHistory} style={styles.historyBtn}>
+          <button onClick={openHistoryPage} style={styles.historyBtn}>
             View History
           </button>
         </div>
@@ -413,38 +392,40 @@ function App() {
             placeholder="e.g., B08N5WRWNW"
             style={styles.input}
             onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleSubmit(e);
-              }
+              if (e.key === "Enter") handleSubmit(e);
             }}
           />
-
           <button onClick={handleSubmit} style={styles.submitBtn}>
             Search
           </button>
 
-          {/* ✅ Suggestions Section */}
-          <div style={styles.suggestionsWrapper}>
-            <p style={styles.suggestionsTitle}>Try these ASINs:</p>
-            <div style={styles.suggestionsRow}>
-              {demoASINs.map((asin, idx) => (
-                <div
-                  key={idx}
-                  style={styles.suggestionItem}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = "#2563eb";
-                    e.target.style.color = "white";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = "#e0edff";
-                    e.target.style.color = "#1e40af";
-                  }}
-                  onClick={() => handleSubmit(null, asin)}
-                >
-                  {asin}
-                </div>
-              ))}
-            </div>
+          {/* Demo ASINs below input */}
+          <div style={styles.demoContainer}>
+            <p style={styles.demoMessage}>
+              Use these demo ASINs if you don’t have any ASIN to try:
+            </p>
+            {demoASINs.map((demoASIN) => (
+              <button
+                key={demoASIN}
+                onClick={() => {
+                  setASIN(demoASIN);
+                  handleSubmit(null, demoASIN);
+                }}
+                style={{
+                  marginRight: "8px",
+                  marginBottom: "8px",
+                  padding: "8px 12px",
+                  backgroundColor: "#2563eb",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {demoASIN}
+              </button>
+            ))}
           </div>
 
           {error && <p style={styles.error}>{error}</p>}
@@ -458,29 +439,14 @@ function App() {
         )}
 
         {result && !loading && (
-          <>
-            <div style={styles.cardsGrid}>
-              <ProductCard data={result.original} title="Original Listing" />
-              <ProductCard
-                data={result.optimized}
-                title="Optimized Listing"
-                isOptimized
-              />
-            </div>
-
-            {result.optimized?.keywords?.length > 0 && (
-              <div style={styles.keywordsContainer}>
-                <p style={styles.keywordsTitle}>Keywords:</p>
-                <div style={styles.keywordTags}>
-                  {result.optimized.keywords.map((keyword, idx) => (
-                    <span key={idx} style={styles.keywordTag}>
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
+          <div style={styles.cardsGrid}>
+            <ProductCard data={result.original} title="Original Listing" />
+            <ProductCard
+              data={result.optimized}
+              title="Optimized Listing"
+              isOptimized
+            />
+          </div>
         )}
       </div>
     </div>
