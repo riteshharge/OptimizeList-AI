@@ -1,31 +1,42 @@
 import express from "express";
 import cors from "cors";
-import helmet from "helmet";
 import dotenv from "dotenv";
 import path from "path";
-import amazonRoutes from "./src/routes/route.js";
+import { fileURLToPath } from "url";
+import mongoose from "mongoose";
+import amazonRoutes from "./src/routes/route.js"; // ✅ add this line
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const PORT = process.env.PORT || 9003;
-
-// Middleware
+app.use(cors());
 app.use(express.json());
-app.use(helmet());
-app.use(cors({ origin: "*", methods: ["GET", "POST"], credentials: true }));
 
-// API Routes
+// ✅ connect MongoDB
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// ✅ register routes BEFORE fallback
 app.use("/api", amazonRoutes);
 
-// Serve frontend
-const frontendDistPath = path.join(process.cwd(), "frontend/dist");
-app.use("/OptimizeList-AI", express.static(frontendDistPath));
+// Health check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", message: "Backend running smoothly 🚀" });
+});
 
-// **Serve index.html for any other route under /OptimizeList-AI**
-app.get("/OptimizeList-AI/*", (req, res) => {
+// Static frontend (if serving React)
+const frontendDistPath = path.join(__dirname, "..", "frontend", "dist");
+app.use(express.static(frontendDistPath));
+
+// ✅ React fallback MUST be last
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(frontendDistPath, "index.html"));
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

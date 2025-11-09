@@ -1,12 +1,11 @@
-// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "/OptimizeList-AI/", // must match your GitHub repo & server static path
+  base: "/", // use "/" for Render deployment
   plugins: [react()],
   build: {
-    outDir: "dist", // default, ensures production files go here
+    outDir: "dist", // production files go here
     rollupOptions: {
       output: {
         // Ensure correct paths for CSS/JS assets
@@ -18,7 +17,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "http://localhost:9003", // local API proxy for dev
+      "/api": "http://localhost:9003", // local API proxy for development
     },
   },
 });
