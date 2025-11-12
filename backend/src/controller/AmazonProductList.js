@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+
 import "../../MongoConnections.js";
 
 import { AiServiceForAmazonProduct } from "../ai/useaiService.js";
@@ -24,7 +25,12 @@ export async function AmazonProductList(req, res) {
     const url = `https://www.amazon.in/dp/${ASIN}`;
     const browser = await chromium.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--single-process",
+        "--no-zygote",
+      ],
     });
     const page = await browser.newPage();
 
