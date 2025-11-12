@@ -16,8 +16,8 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: {
-      "/api": "http://localhost:5000", // local API proxy for development
-    },
+    //   proxy: {
+    //     "/api": "http://localhost:5000", // local API proxy for development
+    //   },
   },
 });
