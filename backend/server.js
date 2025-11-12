@@ -5,9 +5,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import fs from "fs";
-import { exec } from "child_process";
 import amazonRoutes from "./src/routes/route.js";
-import { exec } from "child_process";
+import { exec, execSync } from "child_process";
 
 dotenv.config();
 
@@ -36,16 +35,6 @@ app.use(
 );
 
 app.use(express.json());
-
-// 🧠 Ensure Playwright Chromium exists (non-blocking)
-console.log("✅ Checking Playwright installation...");
-exec("node ./node_modules/playwright/cli.js install chromium", (error) => {
-  if (error) {
-    console.error("⚠️ Playwright install at runtime failed:", error.message);
-  } else {
-    console.log("🎭 Playwright Chromium ready at runtime");
-  }
-});
 
 // 🔗 MongoDB connection
 const mongoUri =
