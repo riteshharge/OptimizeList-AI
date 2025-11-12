@@ -167,6 +167,7 @@ function App() {
     }
   `;
 
+  // ✅ UPDATED handleSubmit
   const handleSubmit = async (e, customASIN = null) => {
     if (e) e.preventDefault();
     const finalASIN = customASIN || ASIN;
@@ -182,11 +183,14 @@ function App() {
     setResult(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/amazon-product", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ASIN: finalASIN }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/amazon-product`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ASIN: finalASIN }),
+        }
+      );
 
       const data = await response.json();
 
@@ -399,7 +403,6 @@ function App() {
             Search
           </button>
 
-          {/* Demo ASINs below input */}
           <div style={styles.demoContainer}>
             <p style={styles.demoMessage}>
               Use these demo ASINs if you don’t have any ASIN to try:
