@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import fs from "fs";
+import { exec } from "child_process";
 import amazonRoutes from "./src/routes/route.js";
 
 dotenv.config();
@@ -16,11 +17,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
+// 🧠 Ensure Playwright Chromium exists (non-blocking)
+console.log("✅ Checking Playwright installation...");
+exec("npx playwright install chromium", (error, stdout, stderr) => {
+  if (error) {
+    console.error("⚠️ Playwright install at runtime failed:", error.message);
+  } else {
+    console.log("🎭 Playwright Chromium ensured at runtime");
+  }
+});
+
+// 🔗 MongoDB connection
 const mongoUri =
   process.env.MONGODB_URI ||
   process.env.MONGO_URI ||
   "mongodb://localhost:27017/optimizelist";
+
 mongoose.set("strictQuery", false);
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -30,18 +42,18 @@ mongoose
     process.exit(1);
   });
 
-// API routes
+// 🚀 API routes
 app.use("/api", amazonRoutes);
 
-// Health check
+// 🩺 Health check
 app.get("/api/health", (req, res) =>
   res.json({ status: "OK", message: "Backend running smoothly 🚀" })
 );
 
-// Serve React frontend
-let frontendDistPath = path.join(__dirname, "..", "frontend", "build"); // CRA default
+// 🌐 Serve frontend (Vite or CRA)
+let frontendDistPath = path.join(__dirname, "..", "frontend", "build");
 if (!fs.existsSync(frontendDistPath)) {
-  frontendDistPath = path.join(__dirname, "..", "frontend", "dist"); // Vite fallback
+  frontendDistPath = path.join(__dirname, "..", "frontend", "dist");
 }
 
 if (fs.existsSync(frontendDistPath)) {
@@ -51,9 +63,10 @@ if (fs.existsSync(frontendDistPath)) {
   );
 } else {
   console.warn(
-    "⚠️ React build folder not found. Make sure you run `npm run build` in frontend."
+    "⚠️ React build folder not found. Make sure to build frontend before deploy."
   );
 }
 
 const PORT = process.env.PORT || 5000;
+console.log("🌍 Starting OptimizeList-AI backend on Render environment...");
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
