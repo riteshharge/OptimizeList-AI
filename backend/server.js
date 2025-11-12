@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import fs from "fs";
 import { exec } from "child_process";
 import amazonRoutes from "./src/routes/route.js";
+import { exec } from "child_process";
 
 dotenv.config();
 
@@ -38,11 +39,11 @@ app.use(express.json());
 
 // 🧠 Ensure Playwright Chromium exists (non-blocking)
 console.log("✅ Checking Playwright installation...");
-exec("npx playwright install chromium", (error, stdout, stderr) => {
+exec("node ./node_modules/playwright/cli.js install chromium", (error) => {
   if (error) {
     console.error("⚠️ Playwright install at runtime failed:", error.message);
   } else {
-    console.log("🎭 Playwright Chromium ensured at runtime");
+    console.log("🎭 Playwright Chromium ready at runtime");
   }
 });
 
