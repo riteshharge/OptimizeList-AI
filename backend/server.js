@@ -14,7 +14,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  "https://ai-powered-amazon-product-listing-xo2w.onrender.com", // your frontend domain
+  "http://localhost:5173", // local dev (optional)
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like curl or Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = `🚫 CORS: The CORS policy does not allow access from origin ${origin}`;
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // 🧠 Ensure Playwright Chromium exists (non-blocking)
